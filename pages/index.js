@@ -1,3 +1,4 @@
+/* eslint no-eval: "error" */
 import { useState } from 'react'
 
 import { Button } from '~/components/button/Button'
@@ -16,9 +17,9 @@ export default function Home() {
   const backSpace = () => {
     setResult(result?.slice(0, -1))
   }
-
   const calculate = () => {
     try {
+      // eslint-disable-next-line no-eval
       setResult(Number(eval(result).toString()).toFixed(2))
     } catch (error) {
       setResult('INVALID format')
