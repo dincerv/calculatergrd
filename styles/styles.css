@@ -81,3 +81,17 @@ calculator__buttons_btn:active {
 .orange {
   background-color: orange;
 }
+
+.display {
+  padding: 16px;
+  text-align: right;
+  background-color: black;
+  color: white;
+  font-size: 25px;
+  font-weight: 300;
+}
+
+.display span {
+  font-size: 20px;
+  color: #888;
+}
