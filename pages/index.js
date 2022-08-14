@@ -6,32 +6,58 @@ import { Button } from '~/components/button/Button'
 export default function Home() {
   const [calc, setCalc] = useState('')
   const [result, setResult] = useState('0')
+  const [lastKey, setLastKey] = useState('')
+  const [hist, setHist] = useState('')
 
   const ops = ['/', '*', '+', '-', '.']
 
   const updateCalculation = (value) => {
-    if (
-      (ops.includes(value) && calc === '') ||
-      (ops.includes(value) && ops.includes(calc.slice(-1)))
-    ) {
+    setLastKey(value)
+
+    if (ops.includes(value) && calc === '') {
       return
     }
-    setCalc(calc + value)
+
+    if (ops.includes(value) && ops.includes(calc.slice(-1))) {
+      setCalc(calc.slice(0, -1) + value)
+      setHist(calc.slice(0, -1) + value)
+    } else {
+      console.log(`Update Calculation > lastKey: ${lastKey}`)
+      if (lastKey === '=') {
+        setCalc(value)
+        setHist(value)
+      } else {
+        setCalc(calc + value)
+        setHist(calc + value)
+      }
+    }
 
     if (!ops.includes(value)) {
-      // eslint-disable-next-line no-eval
-      setResult(eval(calc + value).toString())
+      if (lastKey === '=') {
+        setResult(value)
+      } else {
+        // eslint-disable-next-line no-eval
+        setResult(eval(calc + value).toString())
+      }
     }
   }
 
   const clear = () => {
     setCalc('')
+    setHist('')
+    setResult('')
   }
 
   const backSpace = () => {
     setCalc(calc?.slice(0, -1))
   }
+
   const calculate = () => {
+    setLastKey('=')
+    if (ops.includes(calc.slice(-1))) {
+      return
+    }
+
     try {
       // eslint-disable-next-line no-eval
       setCalc(Number(eval(calc).toString()))
@@ -43,7 +69,15 @@ export default function Home() {
   return (
     <div className="container">
       <div className="calculator">
-        <div className="display">{result ? <span>({result})</span> : ''}</div>
+        <div className="display">
+          {result ? (
+            <span>
+              {hist}={result}
+            </span>
+          ) : (
+            ''
+          )}
+        </div>
         <input type="text" className="calc-numbers" value={calc || 0} />
         <div className="calculator__buttons">
           <Button
